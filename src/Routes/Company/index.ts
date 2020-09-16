@@ -4,6 +4,8 @@ import { CompanyController } from "@Controllers/Company";
 
 import { CompanyEntity } from "@Entities/Company";
 
+import Time from "@Utils/Time";
+
 export class CompanyRouter {
 	public constructor(app: Express) {
 		const router = Router();
@@ -37,6 +39,21 @@ export class CompanyRouter {
 
 	public async create(req: Request, res: Response) {
 		try {
+			const { automaticEndDate } = req.query;
+
+			/**
+			 * Automaticly add EndDate
+			 */
+			if (automaticEndDate) {
+				const { startDateMillis } = req.body;
+
+				if (startDateMillis) {
+					const endDateTimeInstance = new Time(startDateMillis);
+
+					req.body.endDateMillis = endDateTimeInstance.addYears(1).getMillis;
+				}
+			}
+
 			const companyController = new CompanyController(CompanyEntity());
 
 			const companyID = await companyController.create(req.body);
