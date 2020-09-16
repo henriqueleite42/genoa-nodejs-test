@@ -52,10 +52,6 @@ export class CompanyController {
 		if (!Time.isDate(startDate)) {
 			throw new Error("INVALID_START_DATE_TYPE_DATE_EXPECTED");
 		}
-
-		if (!Time.isValid(startDate)) {
-			throw new Error("INVALID_START_DATE");
-		}
 	}
 
 	public validateEndDate({ startDate, endDate }: IValidateEndDate) {
@@ -63,10 +59,6 @@ export class CompanyController {
 
 		if (!Time.isDate(endDate)) {
 			throw new Error("INVALID_END_DATE_TYPE_DATE_EXPECTED");
-		}
-
-		if (!Time.isValid(endDate)) {
-			throw new Error("INVALID_END_DATE");
 		}
 
 		// Checks whether the end date is after start date
@@ -80,12 +72,14 @@ export class CompanyController {
 		const oneYearAfterStartDate = new Time(startDate).addYears(1).getMillis;
 
 		if (!endDateTimeInstace.isSameDay(oneYearAfterStartDate)) {
-			throw new Error("END_DATE_MUST_BE_EXACTLY_ONE_YEAR_AFTER_START_DATE");
+			throw new Error("END_DATE_MUST_BE_EXACTLY_365_DAYS_AFTER_START_DATE");
 		}
 	}
 
 	public validateTotalAssets({ totalAssets }: IValidateTotalAssets) {
-		if (!totalAssets) throw new Error("INVALID_TOTAL_ASSETS");
+		if (typeof totalAssets === "undefined") {
+			throw new Error("INVALID_TOTAL_ASSETS");
+		}
 
 		if (typeof totalAssets !== "number") {
 			throw new Error("INVALID_TOTAL_ASSETS_TYPE_NUMBER_EXPECTED");
@@ -102,10 +96,6 @@ export class CompanyController {
 
 		if (!Time.isDate(openingDate)) {
 			throw new Error("INVALID_OPENING_DATE_TYPE_DATE_EXPECTED");
-		}
-
-		if (!Time.isValid(openingDate)) {
-			throw new Error("INVALID_OPENING_DATE");
 		}
 
 		// Checks if the company is at least 2 years old
@@ -159,7 +149,11 @@ export class CompanyController {
 			createdAt: new Time().getDate,
 		};
 
-		await this._companyEntity.insert(newCompanyDate);
+		try {
+			await this._companyEntity.insert(newCompanyDate);
+		} catch (error) {
+			throw new Error("DUPLICATED_CNPJ");
+		}
 
 		return id;
 	}
