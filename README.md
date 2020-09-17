@@ -98,7 +98,63 @@ sudo make stop
 
 ## Routes
 
-After run the app, send a GET request to `http://localhost:8080` and this will return a tutorial about the routes
+### List all companies
+
+**Method**: GET
+
+**Path**: `/companies/get-all-companies`
+
+### Create Company
+
+**Method**: POST
+
+**Path**: `/companies/create`
+
+**Params:**
+
+| Param             | Type   | Description                                      |
+| ----------------- | ------ | ------------------------------------------------ |
+| cnpj              | String | Company CNPJ                                     |
+| razaoSocial       | String | Company Razão Social                             |
+| startDateMillis   | Number | Start Date, im Milliseconds since Epoch          |
+| endDateMillis     | Number | `optional` End Date, im Milliseconds since Epoch |
+| totalAssets       | Number | Company Total Assets                             |
+| openingDateMillis | Number | Opening Date, im Milliseconds since Epoch        |
+
+**Query Params:**
+
+| Param            | Value | Description                                                    |
+| ---------------- | ----- | -------------------------------------------------------------- |
+| automaticEndDate | 1     | If passed, the function will generate the End Date automaticly |
+
+### Edit Company
+
+**Method**: PUT
+
+**Path**: `/companies/edit`
+
+**Params:**
+
+| Param             | Type   | Description                                          |
+| ----------------- | ------ | ---------------------------------------------------- |
+| id                | String | Company ID                                           |
+| razaoSocial       | String | `optional` Company Razão Social                      |
+| startDateMillis   | Number | `optional` Start Date, im Milliseconds since Epoch   |
+| endDateMillis     | Number | `optional` End Date, im Milliseconds since Epoch     |
+| totalAssets       | Number | `optional` Company Total Assets                      |
+| openingDateMillis | Number | `optional` Opening Date, im Milliseconds since Epoch |
+
+### Delete Company
+
+**Method**: DELETE
+
+**Path**: `/companies/delete`
+
+**Params:**
+
+| Param | Type   | Description |
+| ----- | ------ | ----------- |
+| id    | String | Company ID  |
 
 ## Tips
 
